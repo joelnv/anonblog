@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <title>Post's by everyone</title>
+    </head>
+    <body>
+        <h1>This is the post's by everyone area</h1>
+        {% for post in posts %}
+        <div class="post">
+            <a href="{% url 'posts:post' id=post.id  %}"><h2>{{ post.title }}</h2></a>
+            <p> {{ post.snippet }} </p>
+            <p><strong> {{ post.date }} </strong></p>
+            <p><strong> {{ post.id }} </strong></p>
+        </div>
+        {% endfor %}
+    </body>
+</html>
