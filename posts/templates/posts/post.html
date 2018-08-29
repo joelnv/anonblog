@@ -1,13 +1,11 @@
-<html>
-    <head>
-        <title>Post's by everyone</title>
-    </head>
-    <body>
+{% extends 'base_layout.html' %}
+
+{% block content %}
         <h1>This is the post by You</h1>
         {% if messages %}
 <ul class="messages">
     {% for message in messages %}
-    <li>{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    <li>{% if message.tags %} class="{{ message.tags }}"{% endif %} {{ message }}</li>
     {% endfor %}
 </ul>
 {% endif %}
@@ -19,5 +17,4 @@
             <p><strong> {{ post.id }} </strong></p>
         </div>
 
-    </body>
-</html>
+{% endblock %}
