@@ -1,14 +1,15 @@
 {% extends 'base_layout.html' %}
 
 {% block content %}
+
         <h1>This is the post by You</h1>
         {% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li>{% if message.tags %} class="{{ message.tags }}"{% endif %} {{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li>{% if message.tags %} class="{{ message.tags }}"{% endif %} {{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
         <div class="post">
             <a href="{% url 'posts:post' id=post.id  %}"><h2>{{ post.title }}</h2></a>
