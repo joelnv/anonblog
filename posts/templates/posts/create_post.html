@@ -1,12 +1,6 @@
-{% load static from staticfiles %}
-{% load static %}
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Create a Post</title>
-        <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}"/>
-    </head>
-    <body>
+{% extends 'base_layout.html' %}
+
+{% block content %}
         <h1>Create a anonymous Post</h1>
         <form action="{% url 'posts:create' %}" method="post">
             {% csrf_token %}
@@ -14,14 +8,12 @@
             {{ form.title }}<br>
             {% if form.errors %}
                 {{ form.title.errors }}<br>
-            {% endif %}
             Content <br>
             {{ form.body }}<br>
-            {% if form.errors %}
                 {{ form.body.errors | striptags }}<br>
                 {{ form.non_field_errors }}<br>
             {% endif %}
             <input type="submit" value="Create">
         </form>
-    </body>
-</html>
+
+{% endblock %}

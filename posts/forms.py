@@ -2,7 +2,7 @@ from django import forms
 from . import models
 
 
-class CreatePost(forms.ModelForm):
+class CreatePosts(forms.ModelForm):
     class Meta:
         model = models.Post
         fields = ['title','body']
@@ -15,6 +15,5 @@ class CreatePost(forms.ModelForm):
         body = self.cleaned_data.get('body')
         if len(title) > len(body):
             raise forms.ValidationError("body should be longer than title")
-            return body
-            return title
+
 
