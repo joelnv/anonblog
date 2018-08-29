@@ -2,4 +2,7 @@
 *.pyc
 venv/*
 db.sqlite3
+<<<<<<< HEAD
 
+=======
+>>>>>>> b2410c0bac17720aa771e94c5ee8eaa2672f6753
