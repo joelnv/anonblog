@@ -15,4 +15,3 @@ class Post(models.Model):
 
     def snippet(self):
         return self.body[:75]
-
