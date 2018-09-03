@@ -11,10 +11,6 @@ def post(request,id):
     post = get_object_or_404(Post , id= id)
     return render(request, 'posts/post.html', {'post': post})
 
-def edit(request,id,skey):
-    post = get_object_or_404(Post, id=id , skey=skey)
-    return render(request,'posts/edit.html',{'post': post})
-
 class CreatePost(View):
 
     def get(self, request):
@@ -42,6 +38,7 @@ class EditPost(View):
     def post(self, request , id , skey):
         post = get_object_or_404(Post, id=id, skey=skey)
         form = forms.CreatePosts(request.POST , instance =  post)
+
         if form.is_valid():
             instance = form.save()
             instance.save()
