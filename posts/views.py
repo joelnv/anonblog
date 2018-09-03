@@ -4,6 +4,8 @@ from django.views import View
 from . import forms
 from django.utils.crypto import get_random_string
 from django.contrib import messages
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 
 def post(request,id):
     post = get_object_or_404(Post , id= id)
@@ -21,13 +23,24 @@ class CreatePost(View):
             instance =form.save(commit=False)
             instance.skey =unique_id = get_random_string(length=9)
             instance.save()
-            messages.success(request, 'Secret Key for editing your post is '+ instance.skey)
+            url_path = reverse('posts:edit', kwargs={'id': instance.id , 'skey' : instance.skey})
+            messages.success(request, mark_safe("<a href='{url_path}'>{url_path}</a>".format(url_path=url_path)))
             return redirect('posts:post', id=instance.id)
         return render(request, 'posts/create_post.html', {'form': form})
 
+class EditPost(View):
 
+    def get(self, request ,id , skey):
+        post = get_object_or_404(Post, id= id, skey= skey)
+        form = forms.CreatePosts(instance = post)
+        return render(request, 'posts/edit.html',{'form':form  , 'post':post})
 
+    def post(self, request , id , skey):
+        post = get_object_or_404(Post, id=id, skey=skey)
+        form = forms.CreatePosts(request.POST , instance =  post)
 
-
-
-
+        if form.is_valid():
+            instance = form.save()
+            instance.save()
+            return redirect('posts:post', id=instance.id)
+        return render(request, 'posts/edit_post.html', {'form': form})

@@ -1,17 +1,11 @@
 {% extends 'base_layout.html' %}
 
 {% block content %}
+
         <h1>Create a anonymous Post</h1>
-        <form action="{% url 'posts:create' %}" method="post">
-            {% csrf_token %}
-            Title
-            {{ form.title }}
-            {{ form.title.errors }}
-            Content
-            {{ form.body }}
-            {{ form.body.errors | striptags }}
-            {{ form.non_field_errors }}
-            <input type="submit" value="Create">
+        <form action="{% url 'posts:create' %}" method="post" class="col-lg-8">
+            {% include 'pform.html' %}
+            <input type="submit" class="btn btn-lg bg-primary btn-outline-secondary"value="Create">
         </form>
 
 {% endblock %}

@@ -2,20 +2,27 @@
 
 {% block content %}
 
-        <h1>This is the post by You</h1>
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li>{% if message.tags %} class="{{ message.tags }}"{% endif %} {{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+        <h1 class="m-title">This is the post by You</h1>
 
-        <div class="post">
-            <a href="{% url 'posts:post' id=post.id  %}"><h2>{{ post.title }}</h2></a>
-            <p> {{ post.body }} </p>
-            <p><strong> {{ post.date }} </strong></p>
-            <p><strong> {{ post.id }} </strong></p>
+
+        <div class="post jumbotron">
+            {% if messages %}
+                <div class="alert alert-info" role="alert">
+                    <h4>Your edit link </h4>
+                    {% for message in messages %}
+                        <div><h2>{% if "login" in messages.tags %} class="{{ message.tags }}"{% endif %} {{ message }}</h2></div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="post-title">
+                <a class="text-light" href="{% url 'posts:post' id=post.id  %}"><h2 class="text-center text-light gray">{{ post.title }}</h2></a>
+            </div>
+            <div class="post-body"><p> {{ post.body }} </p></div>
+            <p class="text-right f-r post-ds"> {{ post.date }} </p>
+            <p class="post-ds">Post Number : <strong> {{ post.id }} </strong></p>
+
+            <!--<a href="{% url 'posts:edit' id=post.id skey=post.skey %}">http://127.0.0.1:8000/posts/{{post.id}}/edit/{{post.skey}}</a>-->
         </div>
 
 {% endblock %}
