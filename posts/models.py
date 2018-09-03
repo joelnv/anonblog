@@ -1,10 +1,10 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
-
+from django import forms
 # Create your models here.
 class Post(models.Model):
-    title = models.CharField(validators=[MinLengthValidator(10,"The value should be lesser than %(limit_value)s.")],max_length=100)
-    body = models.TextField(validators=[MinLengthValidator(10,"The value should be lesser than %(limit_value)s.")])
+    title = models.CharField(validators=[MinLengthValidator(10,"The value should be more than %(limit_value)s.")],max_length=100)
+    body = models.TextField(validators=[MinLengthValidator(10,"The value should be more than %(limit_value)s.")])
     date = models.DateTimeField(auto_now_add=True)
     skey =models.CharField(max_length=9)
 
