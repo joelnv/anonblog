@@ -4,15 +4,8 @@
 
     <h1>Edit this post here</h1>
     <form action="{% url 'posts:edit' post.id post.skey %}" method="post">
-        {% csrf_token %}
-        Title
-        {{ form.title }}
-        {{ form.title.errors }}
-        Content
-        {{ form.body }}
-        {{ form.body.errors | striptags }}
-        {{ form.non_field_errors }}
-        <input type="submit" value="Create">
+        {% include 'pform.html' %}
+        <input type="submit" class="btn btn-lg bg-primary btn-outline-secondary"value="Edit Post">
     </form>
 
 {% endblock %}
