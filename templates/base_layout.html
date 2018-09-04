@@ -6,9 +6,9 @@
     </head>
     <body>
 
-
-        <nav class="navbar navbar-fixed-top navbar-expand-lg bg-light sticky-top border-bottom">
-            <a class="navbar-brand" href="#"><h1 class="mt-0 pt-0 text-info">AnonBlog</h1></a>
+        <nav class="navbar navbar-fixed-top navbar-expand-lg bg-light sticky-top border-bottom ">
+            <a class="navbar-brand mr-5" href="#"><h1 class="mt-0 pt-0 text-info">AnonBlog</h1></a>
+            <div class="float-right"><a class="nav-link pt-4 pl-5 float-right text-right" href="{% url 'posts:create' %}"><h4>Home</h4></a></div>
         </nav>
         <div class="wrapper container mt-5 pt-5">
             {% block content %}
