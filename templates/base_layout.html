@@ -1,25 +1,20 @@
-{% load static from staticfiles %}
-{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     </head>
-    <body STYLE="height:2000px;">
-    <nav class="navbar navbar-default navbar-fixed-top " style="height:70px;">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#"><h2  style="margin-top:5px;"> AnonBlog </h2></a>
-    </div>
-  </div><!-- /.container-fluid -->
-</nav>
-    <div class="wrapper container" style="margin-top:100px;">
-    {% block content %}
+    <body>
 
 
-    {% endblock %}
+        <nav class="navbar navbar-fixed-top navbar-expand-lg bg-light sticky-top border-bottom">
+            <a class="navbar-brand" href="#"><h1 class="mt-0 pt-0 text-info">AnonBlog</h1></a>
+        </nav>
+        <div class="wrapper container mt-5 pt-5">
+            {% block content %}
+
+
+            {% endblock %}
         </div>
     </body>
 </html>

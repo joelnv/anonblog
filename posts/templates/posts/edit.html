@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <h1>Edit this post here</h1>
+    <h1 class="alert alert-warning">Edit this post here</h1>
     <form action="{% url 'posts:edit' post.id post.skey %}" method="post">
         {% include 'pform.html' %}
         <input type="submit" class="btn btn-lg bg-primary btn-outline-secondary"value="Edit Post">
