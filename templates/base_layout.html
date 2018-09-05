@@ -1,14 +1,19 @@
-{% load static from staticfiles %}
-{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     </head>
     <body>
-    {% block content %}
+
+        <nav class="navbar navbar-fixed-top navbar-expand-lg bg-light sticky-top border-bottom ">
+            <a class="navbar-brand mr-5" href="#"><h1 class="mt-0 pt-0 text-info">AnonBlog</h1></a>
+            <div class="float-right"><a class="nav-link pt-4 pl-5 float-right text-right" href="{% url 'posts:create' %}"><h4>Home</h4></a></div>
+        </nav>
+        <div class="wrapper container mt-5 pt-5">
+            {% block content %}
 
 
-    {% endblock %}
+            {% endblock %}
+        </div>
     </body>
 </html>

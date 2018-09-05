@@ -1,5 +1,5 @@
             {% csrf_token %}
-            <div class="form-group">
+            <div class="form-group was-validated">
                 <label for="Title">Title:</label>
                 {{ form.title }}
             </div>
@@ -8,7 +8,7 @@
                     {{ form.title.errors }}
                 </div>
             {% endif %}
-            <div class="form-group">
+            <div class="form-group was-validated">
                 <label for="body">Content:</label>
                 {{ form.body }}
             </div>

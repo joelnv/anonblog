@@ -43,4 +43,4 @@ class EditPost(View):
             instance = form.save()
             instance.save()
             return redirect('posts:post', id=instance.id)
-        return render(request, 'posts/edit_post.html', {'form': form})
+        return render(request, 'posts/edit.html', {'form': form , 'post':post})

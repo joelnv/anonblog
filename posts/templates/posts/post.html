@@ -2,10 +2,9 @@
 
 {% block content %}
 
-        <h1 class="m-title">This is the post by You</h1>
+        <h1 class="bg-primary p-4 rounded text-light mt-5">This is the post by You</h1>
 
-
-        <div class="post jumbotron">
+        <div class="post jumbotron rounded p-5">
             {% if messages %}
                 <div class="alert alert-info" role="alert">
                     <h4>Your edit link </h4>
@@ -16,13 +15,15 @@
             {% endif %}
 
             <div class="post-title">
-                <a class="text-light" href="{% url 'posts:post' id=post.id  %}"><h2 class="text-center text-light gray">{{ post.title }}</h2></a>
+                <a class="text-light" href="{% url 'posts:post' id=post.id  %}">
+                    <h2 class="bg-dark text-center mt-0 p-5 text-light rounded">{{ post.title }}</h2>
+                </a>
             </div>
-            <div class="post-body"><p> {{ post.body }} </p></div>
-            <p class="text-right f-r post-ds"> {{ post.date }} </p>
-            <p class="post-ds">Post Number : <strong> {{ post.id }} </strong></p>
-
-            <!--<a href="{% url 'posts:edit' id=post.id skey=post.skey %}">http://127.0.0.1:8000/posts/{{post.id}}/edit/{{post.skey}}</a>-->
+            <div class="bg-light p-5 ml-4 mr-4 rounded mb-5"><p> {{ post.body }} </p></div>
+            <div class="pb-5">
+                <span class="mt-0 rounded bg-info text-light p-3 float-left">Post Number : <strong> {{ post.id }} </strong></span>
+                <span class="mt-0 rounded bg-info text-light p-3 float-right "><strong> {{ post.date }} </strong></span>
+            </div>
         </div>
 
 {% endblock %}
