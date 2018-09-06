@@ -6,8 +6,8 @@ valid_state = 'is-valid'
 class CreatePosts(forms.ModelForm):
 
     forms.error_css_class = "alert alert-danger"
-    title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control ', 'placeholder': 'Title' ,'pattern':'.{10,}'}))
-    body = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Body' ,'minlength':'10'}))
+    title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control form-control-md', 'placeholder': 'Title' ,'pattern':'.{10,}'}))
+    body = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control form-control-md', 'placeholder': 'Body' ,'minlength':'10'}))
     class Meta:
         model = models.Post
         fields = ['title','body']
