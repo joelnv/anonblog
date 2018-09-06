@@ -2,11 +2,10 @@
 
 {% block content %}
 
-        <h1 class="alert alert-dark mt-5">Create a anonymous Post</h1>
-
-        <form action="{% url 'posts:create' %}" method="post" class="col-lg-8">
+        <h2 class="alert alert-dark">Create a anonymous Post</h2>
+        <form action="{% url 'posts:create' %}" method="post" class="col-lg-8 mb-5 needs-validation">
             {% include 'pform.html' %}
-            <input type="submit" class="btn btn-lg bg-primary btn-outline-secondary text-center"value="Create">
+            <input type="submit" class="btn btn-md bg-primary btn-outline-secondary text-center text-light" value="Create">
         </form>
 
 {% endblock %}

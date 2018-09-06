@@ -5,11 +5,11 @@
     </head>
     <body>
 
-        <nav class="navbar navbar-fixed-top navbar-expand-lg bg-light sticky-top border-bottom ">
-            <a class="navbar-brand mr-5" href="#"><h1 class="mt-0 pt-0 text-info">AnonBlog</h1></a>
-            <div class="float-right"><a class="nav-link pt-4 pl-5 float-right text-right" href="{% url 'posts:create' %}"><h4>Home</h4></a></div>
+        <nav class="navbar bg-light sticky-top border-bottom py-0">
+            <a class="navbar-brand ml-4 text-info " href="#"><h3 class="mt-3">AnonBlog</h3></a>
+            <div class="float-right"><a class="nav-link mt-1 mr-5 float-right text-center bg-secondary rounded text-light" href="{% url 'posts:create' %}">Home</a></div>
         </nav>
-        <div class="wrapper container mt-5 pt-5">
+        <div class="wrapper container mt-4 ">
             {% block content %}
 
 
