@@ -9,6 +9,7 @@ class UserErrorResponse(TestCase):
     @classmethod
     def setUp(self):
         self.client = Client(enforce_csrf_checks=True)
+        self.input = {'title':'This is cool post' ,'body':'what an awsome post by somebody cool.'}
 
     def test_users_error_response_when_title_greater_than_body(self):
         input = {'title': 'fsssssaaadssnnnnndsared', 'body': 'asddddxxanns'}
@@ -28,7 +29,25 @@ class UserErrorResponse(TestCase):
         response = self.client.post(reverse('posts:create'), input)
         self.assertContains(response, error, status_code= 200)
 
+    def test_verify_redirect(self):
+        response = self.client.post(reverse('posts:create'), self.input)
+        instance = Post.objects.get()
+        self.assertRedirects(response,reverse('posts:post', kwargs={'id': instance.id}),status_code=302, target_status_code=200,fetch_redirect_response=True)
 
+    def test_verify_content_is_in_html(self):
+        response = self.client.post(reverse('posts:create'), self.input,follow=True)
+        self.assertContains(response,'This is cool post',status_code=200,html=True )
+        self.assertContains(response,'what an awsome post by somebody cool.', status_code=200, html=True)
+
+    def test_verify_correct_edit_link(self):
+        response = self.client.post(reverse('posts:create'), self.input,follow=True)
+        instance = Post.objects.get()
+        link = '/posts/{id}/edit/{skey}'.format(id=instance.id, skey=instance.skey)
+        self.assertContains(response, link, status_code=200)
+        self.assertContains(response, 'This is cool post', status_code=200,html=True)
+        self.assertContains(response, 'what an awsome post by somebody cool.', status_code=200,html=True)
+        reloaded_page = self.client.get(reverse('posts:post', kwargs={'id': instance.id}))
+        self.assertNotContains(reloaded_page, link, status_code=200)
 
 class PostCreate(TestCase):
 
