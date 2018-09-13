@@ -69,3 +69,21 @@ class PostCreate(TestCase):
         form = CreatePosts(data = input)
         self.assertEqual(len(form.errors), 1)
         self.assertEquals(form.errors['__all__'], ['body should be longer than title'])
+
+
+class   EditLinkTestingORM(TestCase):
+    def setUp(self):
+        self.posts = Post.objects.create(title='ORM testing links' , body='This is edit link test orm' ,skey='123456789')
+        self.posts.save()
+
+    def test_redirect_edit_link(self):
+        response = self.client.get(reverse('posts:edit', kwargs={'id': self.posts.id, 'skey': self.posts.skey}))
+        self.assertContains(response, 'ORM testing links', status_code=200)
+        wrong_skey = 'aaaaaaaaa'
+        response = self.client.get(reverse('posts:edit', kwargs={'id': self.posts.id, 'skey': wrong_skey}))
+        self.assertNotContains(response, 'test blog post with ORM', status_code=404)
+
+    def test_edit_fields_of_post_successfully(self):
+        edit_input = {'title':'I have edited','body':'Title and body are edited'}
+        response = self.client.post(reverse('posts:edit' , kwargs={'id': self.posts.id, 'skey': self.posts.skey}) , edit_input , follow=True)
+        self.assertContains(response, 'Title and body are edited', status_code=200)
