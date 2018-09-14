@@ -9,7 +9,7 @@ class UserErrorResponse(TestCase):
     @classmethod
     def setUp(self):
         self.client = Client(enforce_csrf_checks=True)
-        self.input = {'title':'This is cool post' ,'body':'what an awsome post by somebody cool.'}
+        self.input = {'title':'This is cool post' , 'body':'what an awsome post by somebody cool.'}
 
     def test_users_error_response_when_title_greater_than_body(self):
         input = {'title': 'fsssssaaadssnnnnndsared', 'body': 'asddddxxanns'}
@@ -81,7 +81,7 @@ class   EditLinkTestingORM(TestCase):
         self.assertContains(response, 'ORM testing links', status_code=200)
         wrong_skey = 'aaaaaaaaa'
         response = self.client.get(reverse('posts:edit', kwargs={'id': self.posts.id, 'skey': wrong_skey}))
-        self.assertNotContains(response, 'test blog post with ORM', status_code=404)
+        self.assertEqual(response.status_code,404)
 
     def test_edit_fields_of_post_successfully(self):
         edit_input = {'title':'I have edited','body':'Title and body are edited'}
