@@ -1,9 +1,8 @@
 from django import forms
 from . import models
-from bs4 import BeautifulSoup
+import bleach
 
 VALID_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'b', 'i']
-INVALID_TAGS = ['script']
 
 class CreatePosts(forms.ModelForm):
 
@@ -21,20 +20,7 @@ class CreatePosts(forms.ModelForm):
         if len(title) > len(body):
             raise forms.ValidationError("body should be longer than title")
 
-    def clean_title(self):
-        title = self.cleaned_data.get('title')
-        soup = BeautifulSoup(title, 'lxml')
-        for tag in soup.findAll(True):
-            if tag.name not in VALID_TAGS:
-                tag.hidden = True
-        return soup.renderContents().decode("utf-8")
-
     def clean_body(self):
         body = self.cleaned_data.get('body')
-        soup = BeautifulSoup(body, 'lxml')
-        for tag in soup.findAll(True):
-            if tag.name not in VALID_TAGS:
-                tag.hidden = True
-            [s.extract() for s in soup('script')]
-            soup
-        return soup.renderContents().decode("utf-8")
+        sanitized_body = bleach.clean(body, tags=VALID_TAGS)
+        return sanitized_body
