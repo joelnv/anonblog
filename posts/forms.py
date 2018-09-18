@@ -1,8 +1,10 @@
 from django import forms
 from . import models
+from bs4 import BeautifulSoup
 
+VALID_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'b', 'i']
+INVALID_TAGS = ['script']
 
-valid_state = 'is-valid'
 class CreatePosts(forms.ModelForm):
 
     forms.error_css_class = "alert alert-danger"
@@ -20,5 +22,19 @@ class CreatePosts(forms.ModelForm):
             raise forms.ValidationError("body should be longer than title")
 
     def clean_title(self):
-        valid_state = 'is-invalid'
-        return self.cleaned_data['title']
+        title = self.cleaned_data.get('title')
+        soup = BeautifulSoup(title, 'lxml')
+        for tag in soup.findAll(True):
+            if tag.name not in VALID_TAGS:
+                tag.hidden = True
+        return soup.renderContents().decode("utf-8")
+
+    def clean_body(self):
+        body = self.cleaned_data.get('body')
+        soup = BeautifulSoup(body, 'lxml')
+        for tag in soup.findAll(True):
+            if tag.name not in VALID_TAGS:
+                tag.hidden = True
+            [s.extract() for s in soup('script')]
+            soup
+        return soup.renderContents().decode("utf-8")
