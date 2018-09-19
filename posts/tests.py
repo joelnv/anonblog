@@ -49,6 +49,12 @@ class UserErrorResponse(TestCase):
         reloaded_page = self.client.get(reverse('posts:post', kwargs={'id': instance.id}))
         self.assertNotContains(reloaded_page, link, status_code=200)
 
+    def test_verify_content_newline_as_br(self):
+        input = {'title':'verfing newline as br','body':'This first line. \n This is second line.'}
+        response = self.client.post(reverse('posts:create'), input, follow= True)
+        self.assertContains(response,'This first line. <br /> This is second line.', status_code=200)
+
+
 class PostCreate(TestCase):
 
     def test_title_is_less_than_ten(self):
