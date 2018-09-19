@@ -1,8 +1,9 @@
 from django import forms
 from . import models
+import bleach
 
+VALID_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'b', 'i']
 
-valid_state = 'is-valid'
 class CreatePosts(forms.ModelForm):
 
     forms.error_css_class = "alert alert-danger"
@@ -19,6 +20,7 @@ class CreatePosts(forms.ModelForm):
         if len(title) > len(body):
             raise forms.ValidationError("body should be longer than title")
 
-    def clean_title(self):
-        valid_state = 'is-invalid'
-        return self.cleaned_data['title']
+    def clean_body(self):
+        body = self.cleaned_data.get('body')
+        sanitized_body = bleach.clean(body, tags=VALID_TAGS)
+        return sanitized_body
