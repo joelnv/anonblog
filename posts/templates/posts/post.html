@@ -3,6 +3,7 @@
 {% block content %}
 
         <h2 class="bg-primary p-4 rounded text-light">This is the post by You</h2>
+        <div>{{post.toc | linebreaks }}</div>
 
         <div class="post jumbotron rounded p-4">
             {% if messages %}
@@ -19,7 +20,7 @@
                     <h2 class="bg-dark text-center mt-0 p-3 text-light rounded">{{ post.title }}</h2>
                 </a>
             </div>
-            <div class="bg-light p-3 ml-4 mr-4 rounded mb-3"><p> {{ post.body | linebreaks }} </p></div>
+            <div class="bg-light p-3 ml-4 mr-4 rounded mb-3"><p> {% autoescape off %} {{ post.body | linebreaks }} {% endautoescape %} </p></div>
             <div class="pb-5">
                 <span class="mt-0 rounded bg-info text-light p-2 float-left">Post Number : <strong> {{ post.id }} </strong></span>
                 <span class="mt-0 rounded bg-info text-light p-2 float-right "><strong> {{ post.date }} </strong></span>

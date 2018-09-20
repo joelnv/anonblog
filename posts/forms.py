@@ -1,6 +1,7 @@
 from django import forms
 from . import models
 import bleach
+from bs4 import BeautifulSoup
 
 VALID_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'b', 'i']
 

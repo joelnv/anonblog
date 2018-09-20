@@ -21,7 +21,7 @@ class CreatePost(View):
         form = forms.CreatePosts(request.POST)
         if form.is_valid():
             instance =form.save(commit=False)
-            instance.skey =unique_id = get_random_string(length=9)
+            instance.skey =get_random_string(length=9)
             instance.save()
             url_path = reverse('posts:edit', kwargs={'id': instance.id , 'skey' : instance.skey})
             messages.success(request, mark_safe("<a href='{url_path}'>{url_path}</a>".format(url_path=url_path)))
