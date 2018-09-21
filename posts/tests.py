@@ -77,7 +77,7 @@ class PostCreate(TestCase):
         self.assertEquals(form.errors['__all__'], ['body should be longer than title'])
 
 
-class   EditLinkTestingORM(TestCase):
+class EditLinkTestingORM(TestCase):
     def setUp(self):
         self.posts = Post.objects.create(title='ORM testing links' , body='This is edit link test orm' ,skey='123456789')
         self.posts.save()
@@ -93,3 +93,18 @@ class   EditLinkTestingORM(TestCase):
         edit_input = {'title':'I have edited','body':'Title and body are edited'}
         response = self.client.post(reverse('posts:edit' , kwargs={'id': self.posts.id, 'skey': self.posts.skey}) , edit_input , follow=True)
         self.assertContains(response, 'Title and body are edited', status_code=200)
+
+class PostPageTesting(TestCase):
+    def setUp(self):
+        self.input = {'title':'This is cool post', 'body':'<script>alert("Hello");</script>\n\n what an awsome post by somebody cool.'}
+        self.response = self.client.post(reverse('posts:create'), self.input, follow=True)
+        self.instance = Post.objects.get()
+        self.assertRedirects(self.response, reverse('posts:post', kwargs={'id': self.instance.id}), status_code=302,
+                             target_status_code=200, fetch_redirect_response=True)
+
+    def test_rendering_multiple_paragraphs(self):
+        self.assertContains(self.response, '<p> what an awsome post by somebody cool.</p>', status_code=200)
+
+    def test_no_rendering_unsafe_tags(self):
+        self.assertContains(self.response, '<p>&lt;script&gt;alert("Hello");&lt;/script&gt;</p>', status_code=200)
+
