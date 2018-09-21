@@ -5,8 +5,9 @@ from bs4 import BeautifulSoup
 # Create your models here.
 
 class Post(models.Model):
-    title = models.CharField(validators=[MinLengthValidator(10,"The value should be more than %(limit_value)s.")],max_length=100)
-    body = models.TextField(validators=[MinLengthValidator(10,"The value should be more than %(limit_value)s.")])
+    title = models.CharField(validators=[MinLengthValidator(10, "The value should be more than %(limit_value)s.")],
+                             max_length=100)
+    body = models.TextField(validators=[MinLengthValidator(10, "The value should be more than %(limit_value)s.")])
     date = models.DateTimeField(auto_now_add=True)
     skey =models.CharField(max_length=9)
 
@@ -24,6 +25,6 @@ class Post(models.Model):
             if tag.string:
                 text = tag.string
                 headtype = int(tag.name[1:])
-                tag.string.replace_with("<ul>"* headtype +"<li>" + text + "\n </li>"+"</ul>"*headtype)
-                toc+= tag.string
+                tag.string.replace_with("<ul>" * headtype + "<li>" + text + "\n </li>" + "</ul>" * headtype)
+                toc += tag.string
         return toc
