@@ -21,8 +21,9 @@ class Post(models.Model):
         soup = BeautifulSoup(body, 'lxml')
         toc = ""
         for tag in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
-            text = tag.string
-            headtype = int(tag.name[1:])
-            tag.string.replace_with("<ul>"* headtype +"<li>" + text + "\n </li>"+"</ul>"*headtype)
-            toc+= tag.string
+            if tag.string:
+                text = tag.string
+                headtype = int(tag.name[1:])
+                tag.string.replace_with("<ul>"* headtype +"<li>" + text + "\n </li>"+"</ul>"*headtype)
+                toc+= tag.string
         return toc
