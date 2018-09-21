@@ -10,10 +10,8 @@ class Post(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     skey =models.CharField(max_length=9)
 
-
     def __str__(self):
         return self.title
-
 
     def snippet(self):
         return self.body[:75]
@@ -23,29 +21,9 @@ class Post(models.Model):
         soup = BeautifulSoup(body, 'lxml')
         toc = ""
         for tag in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
-            if tag.name == 'h1':
+            if tag.string:
                 text = tag.string
-                tag.string.replace_with("* " + text + '\n')
+                headtype = int(tag.name[1:])
+                tag.string.replace_with("<ul>"* headtype +"<li>" + text + "\n </li>"+"</ul>"*headtype)
                 toc+= tag.string
-            if tag.name == 'h2':
-                text = tag.string
-                tag.string.replace_with("** " + text + '\n')
-                toc += tag.string
-            if tag.name == 'h3':
-                text = tag.string
-                tag.string.replace_with("*** " + text + '\n')
-                toc += tag.string
-            if tag.name == 'h4':
-                text = tag.string
-                tag.string.replace_with("**** " + text + '\n')
-                toc += tag.string
-            if tag.name == 'h5':
-                text = tag.string
-                tag.string.replace_with("***** " + text + '\n')
-                toc += tag.string
-            if tag.name == 'h6':
-                text = tag.string
-                tag.string.replace_with("****** " + text + '\n')
-                toc += tag.string
         return toc
-

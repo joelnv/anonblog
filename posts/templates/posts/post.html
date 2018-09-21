@@ -21,7 +21,7 @@
             </div>
             <div class="bg-light p-3 ml-5 mr-4 rounded mb-3 col-lg-5">
                 <div class="col-lg-12 block bg-secondary rounded text-light"><h3 class="text-center">Table of Content</h3></div>
-                <div class="block bg-white rounded p-1 pl-5">{{post.toc | linebreaks }}</div>
+                <div class="block bg-white rounded p-1 pl-5"> {% autoescape off %} {{post.toc | linebreaks }} {% endautoescape %}</div>
             </div>
             <div class="bg-light p-3 ml-4 mr-4 rounded mb-3"><p> {% autoescape off %} {{ post.body | linebreaks }} {% endautoescape %} </p></div>
             <div class="pb-5">
