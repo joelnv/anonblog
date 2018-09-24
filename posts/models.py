@@ -25,6 +25,6 @@ class Post(models.Model):
             if tag.string:
                 text = tag.string
                 headtype = int(tag.name[1:])
-                tag.string.replace_with("<ul>" * headtype + "<li>" + text + "\n </li>" + "</ul>" * headtype)
+                tag.string.replace_with("<ul>" * headtype + "<li>" + text + " </li>" + "</ul>" * headtype)
                 toc += tag.string
         return toc
