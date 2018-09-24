@@ -106,7 +106,7 @@ class PostPageTesting(TestCase):
         self.assertContains(self.response, '<p> what an awsome post by somebody cool.</p>', status_code=200)
 
     def test_no_rendering_unsafe_tags(self):
-        self.assertContains(self.response, '&lt;script&gt;alert("Hello");&lt;/script&gt;', status_code=200)
+        self.assertContains(self.response, '<h1>This is the main heading </h1> &lt;script&gt;alert("Hello");&lt;/script&gt;<h2>This is the sub heading </h2>', status_code=200)
 
     def test_to_check_Headings_in_outline(self):
-        self.assertContains(self.response, '<ul><li>This is the main heading <br /> </li></ul><ul><ul><li>This is the sub heading <br /> </li></ul></ul>', status_code=200)
+        self.assertContains(self.response, '<ul><li>This is the main heading  </li></ul><ul><ul><li>This is the sub heading  </li></ul></ul>', status_code=200)
