@@ -96,7 +96,7 @@ class EditLinkTestingORM(TestCase):
 
 class PostPageTesting(TestCase):
     def setUp(self):
-        self.input = {'title':'This is cool post', 'body':'<script>alert("Hello");</script>\n\n what an awsome post by somebody cool.'}
+        self.input = {'title':'This is cool post', 'body':'<h1>This is the main heading </h1> <script>alert("Hello");</script><h2>This is the sub heading </h2>the is para one\n\n what an awsome post by somebody cool.'}
         self.response = self.client.post(reverse('posts:create'), self.input, follow=True)
         self.instance = Post.objects.get()
         self.assertRedirects(self.response, reverse('posts:post', kwargs={'id': self.instance.id}), status_code=302,
@@ -106,5 +106,7 @@ class PostPageTesting(TestCase):
         self.assertContains(self.response, '<p> what an awsome post by somebody cool.</p>', status_code=200)
 
     def test_no_rendering_unsafe_tags(self):
-        self.assertContains(self.response, '<p>&lt;script&gt;alert("Hello");&lt;/script&gt;</p>', status_code=200)
+        self.assertContains(self.response, '&lt;script&gt;alert("Hello");&lt;/script&gt;', status_code=200)
 
+    def test_to_check_Headings_in_outline(self):
+        self.assertContains(self.response, '<ul><li>This is the main heading <br /> </li></ul><ul><ul><li>This is the sub heading <br /> </li></ul></ul>', status_code=200)
