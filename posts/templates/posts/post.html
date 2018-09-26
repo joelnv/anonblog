@@ -2,35 +2,32 @@
 
 {% block content %}
 
-<h2 class="bg-primary p-4 rounded text-light">This is the post by You</h2>
+    <h2 class="bg-primary p-4 rounded text-light">This is the post by You</h2>
 
-<div class="post jumbotron rounded p-4 justify-content-xl-center">
-    {% if messages %}
-    <div class="alert alert-info" role="alert">
-        <h4>Your edit link </h4>
-        {% for message in messages %}
-        <div><h2>{% if "login" in messages.tags %} class="{{ message.tags }}"{% endif %} {{ message }}</h2></div>
-        {% endfor %}
-    </div>
-    {% endif %}
+    <div class="post jumbotron rounded p-4 justify-content-xl-center">
+        {% if messages %}
+            <div class="alert alert-info" role="alert">
+                <h4>Your edit link </h4>
+                {% for message in messages %}
+                <div><h2>{% if "login" in messages.tags %} class="{{ message.tags }}"{% endif %} {{ message }}</h2></div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-    <div class="post-title">
-        <a class="text-light" href="{% url 'posts:post' id=post.id  %}">
-            <h2 class="bg-dark text-center mt-0 p-3 text-light rounded">{{ post.title }}</h2>
-        </a>
-    </div>
-    <div class="bg-light p-3 ml-5 mr-4 rounded mb-3 col-lg-5">
-        <div class="col-lg-12 block bg-secondary rounded text-light"><h3 class="text-center">Table of Content</h3></div>
-        <div class="block bg-white rounded p-1 pl-5"> {% autoescape off %} {{post.toc | linebreaks }} {% endautoescape
-            %}
+        <div class="post-title">
+            <a class="text-light" href="{% url 'posts:post' id=post.id  %}">
+                <h2 class="bg-dark text-center mt-0 p-3 text-light rounded">{{ post.title }}</h2>
+            </a>
+        </div>
+        <div class="bg-light p-3 ml-5 mr-4 rounded mb-3 col-lg-5">
+            <div class="col-lg-12 block bg-secondary rounded text-light"><h3 class="text-center">Table of Content</h3></div>
+            <div class="block bg-white rounded p-1 pl-5"> {% autoescape off %} {{post.toc | linebreaks }} {% endautoescape %}</div>
+        </div>
+        <div class="bg-light p-3 ml-4 mr-4 rounded mb-3"><p> {% autoescape off %} {{ post.body | linebreaks }} {% endautoescape %} </p></div>
+        <div class="pb-5">
+            <span class="mt-0 rounded bg-info text-light p-2 float-left">Post Number : <strong> {{ post.id }} </strong></span>
+            <span class="mt-0 rounded bg-info text-light p-2 float-right "><strong> {{ post.date }} </strong></span>
         </div>
     </div>
-    <div class="bg-light p-3 ml-4 mr-4 rounded mb-3"><p> {% autoescape off %} {{ post.body | linebreaks }} {%
-        endautoescape %} </p></div>
-    <div class="pb-5">
-        <span class="mt-0 rounded bg-info text-light p-2 float-left">Post Number : <strong> {{ post.id }} </strong></span>
-        <span class="mt-0 rounded bg-info text-light p-2 float-right "><strong> {{ post.date }} </strong></span>
-    </div>
-</div>
 
 {% endblock %}

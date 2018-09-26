@@ -2,18 +2,18 @@
 
 {% block content %}
 
-<h1 class="alert alert-info">My Post's</h1>
-<div class="alert alert-warning d-inline-block">Name : <strong>{{user}}</strong></div>
+    <h1 class="alert alert-info">My Post's</h1>
+    <div class="alert alert-warning d-inline-block">Name : <strong>{{user}}</strong></div>
 
 
-{% for post in posts %}
-<a href="{% url 'posts:post' id=post.id  %}">
-    <div class="alert alert-primary col-lg-11 ml-5">
-        <strong>{{ post.title }} </strong>
-    </div>
-</a>
+    {% for post in posts %}
 
+        <a href="{% url 'posts:post' id=post.id  %}">
+            <div class="alert alert-primary col-lg-11 ml-5">
+                <strong>{{ post.title }} </strong>
+            </div>
+        </a>
 
-{% endfor %}
+    {% endfor %}
 
 {% endblock %}
