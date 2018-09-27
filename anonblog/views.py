@@ -36,7 +36,7 @@ class LogIn(View):
 
 class LogOut(View):
 
-    def postx(self, request):
+    def post(self, request):
         logout(request)
         return redirect('posts:create')
 
