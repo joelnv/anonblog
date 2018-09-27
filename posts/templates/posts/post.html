@@ -5,18 +5,26 @@
     <h2 class="bg-primary p-4 rounded text-light">This is the post by You</h2>
 
     <div class="post jumbotron rounded p-4 justify-content-xl-center">
-        {% if messages %}
+        {% if request.user.is_authenticated %}
             <div class="alert alert-info" role="alert">
-                <h4>Your edit link </h4>
-                {% for message in messages %}
-                <div><h2>{% if "login" in messages.tags %} class="{{ message.tags }}"{% endif %} {{ message }}</h2></div>
-                {% endfor %}
+                <h5>Edit link :</h5>
+                <a href="{{ url }}"><h4>/post/{{ post.id }}/edit/</h4></a>
             </div>
+        {% else %}
+            {% if messages %}
+                <div class="alert alert-info" role="alert">
+                    <h4>Your edit link </h4>
+                    {% for message in messages %}
+                    <div><h2>{% if "login" in messages.tags %} class="{{ message.tags }}"{% endif %} {{ message }}</h2></div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         {% endif %}
 
         <div class="post-title">
             <a class="text-light" href="{% url 'posts:post' id=post.id  %}">
                 <h2 class="bg-dark text-center mt-0 p-3 text-light rounded">{{ post.title }}</h2>
+
             </a>
         </div>
         <div class="bg-light p-3 ml-5 mr-4 rounded mb-3 col-lg-5">

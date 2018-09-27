@@ -10,7 +10,12 @@ from django.utils.safestring import mark_safe
 
 def post(request,id):
     post = get_object_or_404(Post , id= id)
-    return render(request, 'posts/post.html', {'post': post})
+    if request.user == post.creator:
+        url_path = mark_safe(reverse('posts:edit', kwargs={'id': post.id, 'skey': post.skey}))
+    else:
+        post.skey = None
+        url_path = mark_safe(reverse('posts:edit', kwargs={'id': post.id, 'skey': post.skey}))
+    return render(request, 'posts/post.html', {'post': post, 'url':url_path})
 
 class CreatePost(View):
 
@@ -37,6 +42,8 @@ class EditPost(View):
     def get(self, request ,id , skey):
         post = get_object_or_404(Post, id= id, skey= skey)
         form = forms.CreatePosts(instance = post)
+        if request.user != post.creator:
+            return redirect('posts:post', id=post.id)
         return render(request, 'posts/edit.html',{'form':form, 'post':post})
 
     def post(self, request , id , skey):
