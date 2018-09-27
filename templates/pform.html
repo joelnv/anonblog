@@ -1,36 +1,36 @@
-            {% csrf_token %}
-            {% if form.non_field_errors %}
-                <div class="alert alert-danger pb-0" role="alert">
-                    {{ form.non_field_errors }}
-                </div>
-            {% endif %}
-            <div class="form-group was-validated position-relative">
-                <label for="Title">Title:</label>
-                {{ form.title }}
-                <div class="invalid-feedback">
-                    The title should have atleast 10 characters
-                </div>
-                <div class="valid-feedback">
-                    The title looks great :-)
-                </div>
-            </div>
-            {% if form.title.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ form.title.errors }}
-                </div>
-            {% endif %}
-            <div class="form-group was-validated position-relative">
-                <label for="body">Content:</label>
-                {{ form.body }}
-                <div class="invalid-feedback">
-                    The value should have atleast 10 characters
-                </div>
-                <div class="valid-feedback">
-                    What a great content..!!
-                </div>
-            </div>
-            {% if form.body.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ form.body.errors }}
-                </div>
-            {% endif %}
+{% csrf_token %}
+{% if form.non_field_errors %}
+    <div class="alert alert-danger pb-0" role="alert">
+        {{ form.non_field_errors }}
+    </div>
+{% endif %}
+<div class="form-group was-validated position-relative">
+    <label for="Title">Title:</label>
+    {{ form.title }}
+    <div class="invalid-feedback">
+        The title should have atleast 10 characters
+    </div>
+    <div class="valid-feedback">
+        The title looks great :-)
+    </div>
+</div>
+{% if form.title.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ form.title.errors }}
+    </div>
+{% endif %}
+<div class="form-group was-validated position-relative">
+    <label for="body">Content:</label>
+    {{ form.body }}
+    <div class="invalid-feedback">
+        The value should have atleast 10 characters
+    </div>
+    <div class="valid-feedback">
+        What a great content..!!
+    </div>
+</div>
+{% if form.body.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ form.body.errors }}
+    </div>
+{% endif %}
