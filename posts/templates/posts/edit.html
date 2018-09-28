@@ -3,7 +3,7 @@
 {% block content %}
 
     <h2 class="alert alert-warning">Edit this post here</h2>
-    <form action="{% url 'posts:edit' post.id post.skey %}" method="post" class="col-lg-8 mb-5 needs-validation">
+    <form action="{% url 'posts:edit' post.id%}" method="post" class="col-lg-8 mb-5 needs-validation">
         {% include 'pform.html' %}
         <input type="submit" class="btn btn-md bg-primary btn-outline-secondary text-center text-light" value="Edit Post">
     </form>
