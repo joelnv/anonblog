@@ -38,12 +38,14 @@ class EditPost(View):
 
     def dispatch(self, request, *args, **kwargs):
         self.blog = get_object_or_404(Post, id=kwargs.get('id'))
-        if kwargs.get('skey') and self.blog.creator is None:
+        if not self.blog.creator:
+            self.blog = get_object_or_404(Post, id=kwargs.get('id'),skey=kwargs.get('skey'))
+        if kwargs.get('skey') and not self.blog.creator:
             if not self.blog.skey == kwargs.get('skey'):
                 raise Http404
         elif not (request.user == self.blog.creator):
             raise Http404
-        return super().dispatch(request, *args, **kwargs)
+        return super(EditPost,self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         post = self.blog
@@ -59,29 +61,17 @@ class EditPost(View):
             return redirect('posts:post', id=instance.id)
         return render(request, 'posts/edit.html', {'form': form, 'post':post})
 
-class UserEditPost(View):
-
-    def get(self, request ,id , skey):
-        post = get_object_or_404(Post, id= id, skey= skey)
-        form = forms.CreatePosts(instance = post)
-        if not post.creator:
-             return render(request, 'posts/edit.html', {'form': form, 'post': post})
-        elif request.user != post.creator:
-             return redirect('posts:post', id=post.id)
-        return render(request, 'posts/edit.html',{'form':form, 'post':post})
-
-    def post(self, request , id ):
-        post = get_object_or_404(Post, id=id)
-        form = forms.CreatePosts(request.POST , instance=  post)
-
-        if form.is_valid():
-            instance = form.save()
-            instance.save()
-            return redirect('posts:post', id=instance.id)
-        return render(request, 'posts/edit.html', {'form': form, 'post':post})
-
 class MyPosts(View):
 
     def get(self, request):
         myposts = Post.objects.filter(creator_id=request.user.id).order_by('-id')
         return render(request, 'posts/my_posts.html', {'posts': myposts})
+
+class ClaimPost(View):
+    def get(self, request, id):
+        post = get_object_or_404(Post, id=id)
+        form = forms.CreatePosts(instance = post)
+        post.creator = request.user
+        post.save()
+        return render(request, 'posts/edit.html',{'form':form, 'post':post})
+
