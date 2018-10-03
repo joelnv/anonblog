@@ -13,7 +13,6 @@
                 var r = confirm("Are you Sure you want to claim this Post? \n press OK if Yes");
                 if (r === true) {
                     txt = "{{ request.user }}";
-                    window.location.href = "{% url 'posts:claim' post.id  post.skey %}";
                 } else {
                     txt = "";
                 }
