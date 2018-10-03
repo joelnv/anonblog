@@ -5,13 +5,19 @@
     <h2 class="alert alert-warning">Edit this post here</h2>
     {% if request.user.is_authenticated and  not post.creator %}
         <form action="{% url 'posts:claim' post.id  post.skey %}" method="post" class="col-lg-12">
-            <button class="btn btn-lg btn-block btn-warning mb-3" onclick="return myFunction()">Claim this Post as yours</button
+            <button class="btn btn-lg btn-block btn-warning mb-3" id="claim" onclick="myFunction(event)">Claim this Post as yours</button
         </form>
         <script>
-            function myFunction() {
-                var r = confirm("Are you Sure you want to claim this Post? \n press OK if Yes");
-                return (r ? true : false);
+        function myFunction(event) {
+                var claim = confirm("Are you Sure you want to claim this Post? \n press OK if Yes");
+                if(claim === false){
+                    event.preventDefault();
+                 }
             }
+
+
+
+
         </script>
     {% endif %}
     <form action="{% url 'posts:anon_edit' post.id post.skey %}" method="post" class="col-lg-8 mb-5 needs-validation">
