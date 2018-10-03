@@ -70,8 +70,7 @@ class MyPosts(View):
 class ClaimPost(View):
     def get(self, request, id):
         post = get_object_or_404(Post, id=id)
-        form = forms.CreatePosts(instance = post)
         post.creator = request.user
         post.save()
-        return render(request, 'posts/edit.html',{'form':form, 'post':post})
+        return redirect('posts:edit', id=post.id)
 
