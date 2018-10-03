@@ -9,13 +9,8 @@
         </form>
         <script>
             function myFunction() {
-                var txt;
                 var r = confirm("Are you Sure you want to claim this Post? \n press OK if Yes");
-                if (r === true) {
-                    txt = "{{ request.user }}";
-                } else {
-                    txt = "";
-                }
+                return (r ? true : false);
             }
         </script>
     {% endif %}
