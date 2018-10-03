@@ -10,7 +10,7 @@ urlpatterns = [
     path('<id>/', views.post, name='post'),
     path('<id>/edit/<skey>', EditPost.as_view(), name='anon_edit'),
     path('<id>/edit/', EditPost.as_view(), name='edit'),
-    path('<id>/claim', ClaimPost.as_view(), name='claim'),
+    path('<id>/claim/<skey>', ClaimPost.as_view(), name='claim'),
 
 
 

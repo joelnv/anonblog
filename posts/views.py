@@ -68,8 +68,8 @@ class MyPosts(View):
         return render(request, 'posts/my_posts.html', {'posts': myposts})
 
 class ClaimPost(View):
-    def get(self, request, id):
-        post = get_object_or_404(Post, id=id)
+    def get(self, request, id, skey):
+        post = get_object_or_404(Post, id=id, skey=skey)
         post.creator = request.user
         post.save()
         return redirect('posts:edit', id=post.id)

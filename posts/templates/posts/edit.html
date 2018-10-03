@@ -11,16 +11,13 @@
                 var r = confirm("Are you Sure you want to claim this Post? \n press OK if Yes");
                 if (r == true) {
                     txt = "{{ request.user }}";
-                    window.location.href = "{% url 'posts:claim' post.id %}";
+                    window.location.href = "{% url 'posts:claim' post.id  post.skey %}";
                 } else {
                     txt = "";
-
                 }
-                document.getElementById("demo").innerHTML = txt;
             }
         </script>
     {% endif %}
-        <div id="demo"></div>
     <form action="{% url 'posts:anon_edit' post.id post.skey %}" method="post" class="col-lg-8 mb-5 needs-validation">
         {% include 'pform.html' %}
         <input type="submit" class="btn btn-md bg-primary btn-outline-secondary text-center text-light" value="Edit Post">
