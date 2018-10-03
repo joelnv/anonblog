@@ -40,9 +40,6 @@ class EditPost(View):
         self.blog = get_object_or_404(Post, id=kwargs.get('id'))
         if not self.blog.creator:
             self.blog = get_object_or_404(Post, id=kwargs.get('id'),skey=kwargs.get('skey'))
-        if kwargs.get('skey') and not self.blog.creator:
-            if not self.blog.skey == kwargs.get('skey'):
-                raise Http404
         elif not (request.user == self.blog.creator):
             raise Http404
         return super(EditPost,self).dispatch(request, *args, **kwargs)
@@ -68,7 +65,7 @@ class MyPosts(View):
         return render(request, 'posts/my_posts.html', {'posts': myposts})
 
 class ClaimPost(View):
-    def get(self, request, id, skey):
+    def post(self, request, id, skey):
         post = get_object_or_404(Post, id=id, skey=skey)
         post.creator = request.user
         post.save()

@@ -4,12 +4,14 @@
 
     <h2 class="alert alert-warning">Edit this post here</h2>
     {% if request.user.is_authenticated and  not post.creator %}
-            <button class="btn btn-lg btn-block btn-warning mb-3" onclick="return myFunction()">Claim this Post as yours</button>
+        <form action="{% url 'posts:claim' post.id  post.skey %}" method="post" class="col-lg-12">
+            <button class="btn btn-lg btn-block btn-warning mb-3" onclick="return myFunction()">Claim this Post as yours</button
+        </form>
         <script>
             function myFunction() {
                 var txt;
                 var r = confirm("Are you Sure you want to claim this Post? \n press OK if Yes");
-                if (r == true) {
+                if (r === true) {
                     txt = "{{ request.user }}";
                     window.location.href = "{% url 'posts:claim' post.id  post.skey %}";
                 } else {
