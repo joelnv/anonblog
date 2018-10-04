@@ -5,7 +5,7 @@
     <h2 class="bg-primary p-4 rounded text-light">This is the post by You</h2>
 
     <div class="post jumbotron rounded p-4 justify-content-xl-center">
-        {% if request.user.is_authenticated %}
+        {% if request.user == post.creator %}
             <div class="alert alert-info" role="alert">
                 <h5>Edit link :</h5>
                 <a href="{{ url }}"><h4>/post/{{ post.id }}/edit/</h4></a>

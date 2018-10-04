@@ -1,21 +1,23 @@
 {% extends 'base_layout.html' %}
 
 {% block content %}
-    <h1>Sign Up Page</h1>
-    <form action="{% url 'signup' %}" method="post">
+    <h1 class="col-lg-4 m-auto  p-0 rounded text-center p-3 alert-info">Sign Up Page</h1>
+    <form action="{% url 'signup' %}" method="post" class="col-lg-4 m-auto bg-light p-0 rounded">
         {% csrf_token %}
-        <div class="form-group">
-            <label>Username</label>
+        <div class="form-group p-2 pt-4 ml-5">
+            <label>Username</label><br>
             {{form.username}}
         </div>
-        <div class="form-group">
-            <label>Password</label>
+        <div class="form-group p-2  ml-5">
+            <label>Password</label><br>
             {{form.password1}}
         </div>
-        <div class="form-group">
-            <label>Confirm Password</label>
+        <div class="form-group p-2  ml-5">
+            <label>Confirm Password</label><br>
             {{form.password2}}
         </div>
-        <input type="submit" value="Signup">
+        <div class="bg-light rounded mt-4 pr-4 pb-5">
+            <input type="submit" class="btn btn-info float-right" value="Signup">
+        </div>
     </form>
 {% endblock %}
