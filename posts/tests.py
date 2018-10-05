@@ -114,17 +114,6 @@ class PostPageTesting(TestCase):
     def test_to_check_Headings_in_outline(self):
         self.assertContains(self.response, '<ul><li>This is the main heading  </li></ul><ul><ul><li>This is the sub heading  </li></ul></ul>', status_code=200)
 
-class LoggedInUserTesting(TestCase):
-
-    def setUp(self):
-        self.factory = RequestFactory()
-        self.user = User.objects.create_user(username='joel', password='123aaa789')
-
-    def test_user_login(self):
-        request = self.factory.get('/customer/details')
-        request.user = self.user
-        self.assertTrue(request.user)
-
 class SignUpLogInTest(TestCase):
     def setUp(self):
         self.signup1 = {'username': 'testuser2' , 'password1' : 'aaaa1234', 'password2' : 'aaaa1234'}
@@ -140,9 +129,12 @@ class SignUpLogInTest(TestCase):
         self.assertTrue(response.context['user'].is_active)
         self.assertRedirects(response, reverse('posts:create'))
 
+
     def test_signup_with_already_exsisting_user(self):
         response = self.client.post(reverse('signup'), self.signup3, follow=True)
+        error = 'A user with that username already exists.'
         self.assertFalse(response.context['user'].is_active)
+        self.assertContains(response, error, status_code= 200)
 
     def test_signup_wrong_password(self):
         response = self.client.post(reverse('signup'), self.signup2, follow=True)
