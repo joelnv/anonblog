@@ -1,7 +1,10 @@
-from django.test import TestCase,Client
+from django.test import RequestFactory, TestCase, Client
 from django.urls import reverse
 from .models import Post
 from .forms import CreatePosts
+from django.contrib.auth.models import AnonymousUser, User
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, logout
 
 # Create your tests here.
 
@@ -83,15 +86,15 @@ class EditLinkTestingORM(TestCase):
         self.posts.save()
 
     def test_redirect_edit_link(self):
-        response = self.client.get(reverse('posts:edit', kwargs={'id': self.posts.id, 'skey': self.posts.skey}))
+        response = self.client.get(reverse('posts:anon_edit', kwargs={'id': self.posts.id, 'skey': self.posts.skey}))
         self.assertContains(response, 'ORM testing links', status_code=200)
         wrong_skey = 'aaaaaaaaa'
-        response = self.client.get(reverse('posts:edit', kwargs={'id': self.posts.id, 'skey': wrong_skey}))
+        response = self.client.get(reverse('posts:anon_edit', kwargs={'id': self.posts.id, 'skey': wrong_skey}))
         self.assertEqual(response.status_code,404)
 
     def test_edit_fields_of_post_successfully(self):
         edit_input = {'title':'I have edited','body':'Title and body are edited'}
-        response = self.client.post(reverse('posts:edit' , kwargs={'id': self.posts.id, 'skey': self.posts.skey}) , edit_input , follow=True)
+        response = self.client.post(reverse('posts:anon_edit' , kwargs={'id': self.posts.id, 'skey': self.posts.skey}) , edit_input , follow=True)
         self.assertContains(response, 'Title and body are edited', status_code=200)
 
 class PostPageTesting(TestCase):
@@ -110,3 +113,45 @@ class PostPageTesting(TestCase):
 
     def test_to_check_Headings_in_outline(self):
         self.assertContains(self.response, '<ul><li>This is the main heading  </li></ul><ul><ul><li>This is the sub heading  </li></ul></ul>', status_code=200)
+
+class SignUpLogInTest(TestCase):
+    def setUp(self):
+        self.signup1 = {'username': 'testuser2' , 'password1' : 'aaaa1234', 'password2' : 'aaaa1234'}
+        self.signup2 = {'username': 'testuser' , 'password1' : 'aaaaaaaa', 'password2' : 'aaaacccc'}
+        self.signup3 = {'username': 'testuser', 'password1': 'aaaa1111', 'password2': 'aaaa1111'}
+        self.login = {'username': 'testuser','password': 'secret'}
+        self.login2 = {'username': 'testuser','password': 'secretsssss'}
+        self.login3 = {'username': 'notuser', 'password': 'aassd22222'}
+        User.objects.create_user(**self.login)
+
+    def test_signup(self):
+        response = self.client.post(reverse('signup'), self.signup1, follow=True)
+        self.assertTrue(response.context['user'].is_active)
+        self.assertRedirects(response, reverse('posts:create'))
+
+
+    def test_signup_with_already_exsisting_user(self):
+        response = self.client.post(reverse('signup'), self.signup3, follow=True)
+        error = 'A user with that username already exists.'
+        self.assertFalse(response.context['user'].is_active)
+        self.assertContains(response, error, status_code= 200)
+
+    def test_signup_wrong_password(self):
+        response = self.client.post(reverse('signup'), self.signup2, follow=True)
+        error = "The two password fields didn't match."
+        self.assertFalse(response.context['user'].is_active)
+        self.assertContains(response, error, status_code=200)
+
+
+    def test_login(self):
+        response = self.client.post(reverse('login'), self.login, follow=True)
+        self.assertTrue(response.context['user'].is_active)
+        self.assertRedirects(response, reverse('posts:create'))
+
+    def test_login_wrong_password(self):
+        response = self.client.post(reverse('login'), self.login2, follow=True)
+        self.assertFalse(response.context['user'].is_active)
+
+    def test_unregistered_user_login(self):
+        response = self.client.post(reverse('login'), self.login3, follow=True)
+        self.assertFalse(response.context['user'].is_active)
