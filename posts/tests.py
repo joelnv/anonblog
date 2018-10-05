@@ -138,7 +138,10 @@ class SignUpLogInTest(TestCase):
 
     def test_signup_wrong_password(self):
         response = self.client.post(reverse('signup'), self.signup2, follow=True)
+        error = "The two password fields didn't match."
         self.assertFalse(response.context['user'].is_active)
+        self.assertContains(response, error, status_code=200)
+
 
     def test_login(self):
         response = self.client.post(reverse('login'), self.login, follow=True)
