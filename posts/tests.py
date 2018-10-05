@@ -129,8 +129,10 @@ class SignUpLogInTest(TestCase):
     def setUp(self):
         self.signup1 = {'username': 'testuser2' , 'password1' : 'aaaa1234', 'password2' : 'aaaa1234'}
         self.signup2 = {'username': 'testuser' , 'password1' : 'aaaaaaaa', 'password2' : 'aaaacccc'}
+        self.signup3 = {'username': 'testuser', 'password1': 'aaaa1111', 'password2': 'aaaa1111'}
         self.login = {'username': 'testuser','password': 'secret'}
         self.login2 = {'username': 'testuser','password': 'secretsssss'}
+        self.login3 = {'username': 'notuser', 'password': 'aassd22222'}
         User.objects.create_user(**self.login)
 
     def test_signup(self):
@@ -138,16 +140,23 @@ class SignUpLogInTest(TestCase):
         self.assertTrue(response.context['user'].is_active)
         self.assertRedirects(response, reverse('posts:create'))
 
+    def test_signup_with_already_exsisting_user(self):
+        response = self.client.post(reverse('signup'), self.signup3, follow=True)
+        self.assertFalse(response.context['user'].is_active)
+
     def test_signup_wrong_password(self):
         response = self.client.post(reverse('signup'), self.signup2, follow=True)
         self.assertFalse(response.context['user'].is_active)
-        import pdb;pdb.set_trace()
 
     def test_login(self):
         response = self.client.post(reverse('login'), self.login, follow=True)
         self.assertTrue(response.context['user'].is_active)
         self.assertRedirects(response, reverse('posts:create'))
 
-    def test_unregistered_user_login(self):
+    def test_login_wrong_password(self):
         response = self.client.post(reverse('login'), self.login2, follow=True)
+        self.assertFalse(response.context['user'].is_active)
+
+    def test_unregistered_user_login(self):
+        response = self.client.post(reverse('login'), self.login3, follow=True)
         self.assertFalse(response.context['user'].is_active)
