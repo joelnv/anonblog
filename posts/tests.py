@@ -5,6 +5,7 @@ from .forms import CreatePosts
 from django.contrib.auth.models import AnonymousUser, User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
+import requests
 
 # Create your tests here.
 
@@ -117,7 +118,7 @@ class PostPageTesting(TestCase):
 class SignUpLogInTest(TestCase):
     def setUp(self):
         self.signup1 = {'username': 'testuser2' , 'password1' : 'aaaa1234', 'password2' : 'aaaa1234'}
-        self.signup2 = {'username': 'testuser' , 'password1' : 'aaaaaaaa', 'password2' : 'aaaacccc'}
+        self.signup2 = {'username': 'testuser3' , 'password1' : 'aaaaaaaa', 'password2' : 'aaaacccc'}
         self.signup3 = {'username': 'testuser', 'password1': 'aaaa1111', 'password2': 'aaaa1111'}
         self.login = {'username': 'testuser','password': 'secret'}
         self.login2 = {'username': 'testuser','password': 'secretsssss'}
@@ -138,10 +139,9 @@ class SignUpLogInTest(TestCase):
 
     def test_signup_wrong_password(self):
         response = self.client.post(reverse('signup'), self.signup2, follow=True)
-        error = "The two password fields didn't match."
+        error = "The two password fields didn&#39;t match."
         self.assertFalse(response.context['user'].is_active)
-        self.assertContains(response, error, status_code=200)
-
+        self.assertContains(response, error, status_code= 200)
 
     def test_login(self):
         response = self.client.post(reverse('login'), self.login, follow=True)
@@ -155,3 +155,44 @@ class SignUpLogInTest(TestCase):
     def test_unregistered_user_login(self):
         response = self.client.post(reverse('login'), self.login3, follow=True)
         self.assertFalse(response.context['user'].is_active)
+
+class LoggedInUserArticleCreationTest(TestCase):
+
+    def setUp(self):
+        self.signup1 = {'username': 'testuser2', 'password1': 'aaaa1234', 'password2': 'aaaa1234'}
+        self.login = {'username': 'testuser2', 'password': 'aaaa1234'}
+        User.objects.create_user(**self.login)
+        self.input = {'title':'What a super day', 'body':'this would have been a great day if...'}
+
+    def test_login_post_creation(self):
+        response = self.client.post(reverse('login'), self.login, follow=True)
+        self.assertTrue(response.context['user'].is_active)
+        response = self.client.post(reverse('posts:create'), self.input, follow=True)
+        instance = Post.objects.get()
+        self.assertRedirects(response, reverse('posts:post', kwargs={'id': instance.id}), status_code=302,
+                             target_status_code=200, fetch_redirect_response=True)
+
+    def test_User_mine_link_show_post_titles(self):
+        response = self.client.post(reverse('login'), self.login, follow=True)
+        self.assertTrue(response.context['user'].is_active)
+        response = self.client.post(reverse('posts:create'), self.input, follow=True)
+        instance = Post.objects.get()
+        self.assertRedirects(response, reverse('posts:post', kwargs={'id': instance.id}), status_code=302,
+                             target_status_code=200, fetch_redirect_response=True)
+        response = self.client.get(reverse('posts:myposts'), follow=True)
+        title = 'What a super day'
+        body = 'this would have been a great day if...'
+        self.assertContains(response, title, status_code=200)
+        self.assertNotContains(response, body, status_code=200)
+
+    def test_anonymous_user_has_no_mine_link(self):
+        response = self.client.post(reverse('login'), self.login, follow=True)
+        self.assertTrue(response.context['user'].is_active)
+        response = self.client.post(reverse('posts:create'), self.input, follow=True)
+        instance = Post.objects.get()
+        self.assertRedirects(response, reverse('posts:post', kwargs={'id': instance.id}), status_code=302,
+                             target_status_code=200, fetch_redirect_response=True)
+        response = self.client.post(reverse('logout'), follow=True)
+        self.assertFalse(response.context['user'].is_active)
+        url = self.client.get(reverse('posts:myposts'), follow=True)
+        self.assertEqual(url.status_code, 404)
