@@ -182,3 +182,36 @@ class LoggedInUserArticleTest(TestCase):
         self.assertFalse(response.context['user'].is_active)
         url = self.client.get(reverse('posts:myposts'), follow=True)
         self.assertEqual(url.status_code, 404)
+
+class EditPageTest(TestCase):
+    def setUp(self):
+        self.signup1 = {'username': 'testuser2', 'password1': 'aaaa1234', 'password2': 'aaaa1234'}
+        self.login = {'username': 'testuser2', 'password': 'aaaa1234'}
+        self.response = self.client.post(reverse('signup'), self.signup1, follow=True)
+        self.input = {'title': 'What a super day', 'body': 'this would have been a great day if...'}
+        self.edit_input = {'title': 'I have edited', 'body': 'Title and body are edited'}
+
+    def test_logged_in_user_edit_page_without_secretkey(self):
+        r = self.client.post(reverse('posts:create'), self.input)
+        instance = Post.objects.get(id=r.url.split('/')[2])
+        response = self.client.get(reverse('posts:edit', kwargs={'id': instance.id }))
+        self.assertContains(response, 'this would have been a great day if...', status_code=200)
+        response = self.client.post(reverse('posts:edit', kwargs={'id': instance.id }), self.edit_input, follow=True)
+        self.assertContains(response, self.edit_input['title'], status_code=200)
+
+    def test_logged_in_user_edit_anonymous_post_with_secretkey(self):
+        self.client.post(reverse('logout'), follow=True)
+        r = self.client.post(reverse('posts:create'), self.input)
+        instance = Post.objects.get(id=r.url.split('/')[2])
+        self.client.post(reverse('login'), self.login, follow=True)
+        self.client.get(reverse('posts:anon_edit', kwargs={'id': instance.id, 'skey' : instance.skey}))
+        response = self.client.post(reverse('posts:anon_edit', kwargs={'id': instance.id, 'skey': instance.skey}),
+                                    self.edit_input, follow=True)
+        self.assertContains(response, self.edit_input['title'], status_code=200)
+
+    def test_anonymous_user_edit_page_without_secretkey(self):
+        self.client.post(reverse('logout'), follow=True)
+        r = self.client.post(reverse('posts:create'), self.input)
+        instance = Post.objects.get(id=r.url.split('/')[2])
+        url = self.client.get(reverse('posts:edit', kwargs={'id': instance.id }))
+        self.assertEqual(url.status_code, 404)
