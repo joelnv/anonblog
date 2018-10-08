@@ -167,13 +167,13 @@ class LoggedInUserArticleTest(TestCase):
     def test_login_post_creation_and_checking_mine_link(self):
         response = self.client.post(reverse('login'), self.login, follow=True)
         self.assertTrue(response.context['user'].is_active)
-        response = self.client.post(reverse('posts:create'), self.input, follow=True)
-        instance = Post.objects.get(id=1)
+        response = self.client.post(reverse('posts:create'), self.input)
+        instance = Post.objects.get(id= response.url.split('/')[2])
         self.assertRedirects(response, reverse('posts:post', kwargs={'id': instance.id}), status_code=302,
                              target_status_code=200, fetch_redirect_response=True)
         response = self.client.get(reverse('posts:myposts'), follow=True)
-        title = 'What a super day'
-        body = 'this would have been a great day if...'
+        title = self.input['title']
+        body = self.input['body']
         self.assertContains(response, title, status_code=200)
         self.assertNotContains(response, body, status_code=200)
 
