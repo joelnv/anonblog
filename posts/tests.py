@@ -156,7 +156,7 @@ class SignUpLogInTest(TestCase):
         response = self.client.post(reverse('login'), self.login3, follow=True)
         self.assertFalse(response.context['user'].is_active)
 
-class LoggedInUserArticleCreationTest(TestCase):
+class LoggedInUserArticleTest(TestCase):
 
     def setUp(self):
         self.signup1 = {'username': 'testuser2', 'password1': 'aaaa1234', 'password2': 'aaaa1234'}
@@ -164,19 +164,11 @@ class LoggedInUserArticleCreationTest(TestCase):
         User.objects.create_user(**self.login)
         self.input = {'title':'What a super day', 'body':'this would have been a great day if...'}
 
-    def test_login_post_creation(self):
+    def test_login_post_creation_and_checking_mine_link(self):
         response = self.client.post(reverse('login'), self.login, follow=True)
         self.assertTrue(response.context['user'].is_active)
         response = self.client.post(reverse('posts:create'), self.input, follow=True)
-        instance = Post.objects.get()
-        self.assertRedirects(response, reverse('posts:post', kwargs={'id': instance.id}), status_code=302,
-                             target_status_code=200, fetch_redirect_response=True)
-
-    def test_User_mine_link_show_post_titles(self):
-        response = self.client.post(reverse('login'), self.login, follow=True)
-        self.assertTrue(response.context['user'].is_active)
-        response = self.client.post(reverse('posts:create'), self.input, follow=True)
-        instance = Post.objects.get()
+        instance = Post.objects.get(id=1)
         self.assertRedirects(response, reverse('posts:post', kwargs={'id': instance.id}), status_code=302,
                              target_status_code=200, fetch_redirect_response=True)
         response = self.client.get(reverse('posts:myposts'), follow=True)
@@ -186,12 +178,6 @@ class LoggedInUserArticleCreationTest(TestCase):
         self.assertNotContains(response, body, status_code=200)
 
     def test_anonymous_user_has_no_mine_link(self):
-        response = self.client.post(reverse('login'), self.login, follow=True)
-        self.assertTrue(response.context['user'].is_active)
-        response = self.client.post(reverse('posts:create'), self.input, follow=True)
-        instance = Post.objects.get()
-        self.assertRedirects(response, reverse('posts:post', kwargs={'id': instance.id}), status_code=302,
-                             target_status_code=200, fetch_redirect_response=True)
         response = self.client.post(reverse('logout'), follow=True)
         self.assertFalse(response.context['user'].is_active)
         url = self.client.get(reverse('posts:myposts'), follow=True)
