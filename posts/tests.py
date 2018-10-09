@@ -182,3 +182,61 @@ class LoggedInUserArticleTest(TestCase):
         self.assertFalse(response.context['user'].is_active)
         url = self.client.get(reverse('posts:myposts'), follow=True)
         self.assertEqual(url.status_code, 404)
+
+class EditPageTest(TestCase):
+    def setUp(self):
+        self.signup1 = {'username': 'testuser2', 'password1': 'aaaa1234', 'password2': 'aaaa1234'}
+        self.login = {'username': 'testuser2', 'password': 'aaaa1234'}
+        self.response = self.client.post(reverse('signup'), self.signup1, follow=True)
+        self.input = {'title': 'What a super day', 'body': 'this would have been a great day if...'}
+        self.edit_input = {'title': 'I have edited', 'body': 'Title and body are edited'}
+
+    def test_logged_in_user_edit_page_without_secretkey(self):
+        r = self.client.post(reverse('posts:create'), self.input)
+        instance = Post.objects.get(id=r.url.split('/')[2])
+        response = self.client.get(reverse('posts:edit', kwargs={'id': instance.id }))
+        self.assertContains(response, self.input['body'], status_code=200)
+        response = self.client.post(reverse('posts:edit', kwargs={'id': instance.id }), self.edit_input, follow=True)
+        self.assertContains(response, self.edit_input['title'], status_code=200)
+
+    def test_logged_in_user_edit_anonymous_post_with_secretkey(self):
+        self.client.post(reverse('logout'), follow=True)
+        r = self.client.post(reverse('posts:create'), self.input)
+        instance = Post.objects.get(id=r.url.split('/')[2])
+        self.client.post(reverse('login'), self.login, follow=True)
+        self.client.get(reverse('posts:anon_edit', kwargs={'id': instance.id, 'skey' : instance.skey}))
+        response = self.client.post(reverse('posts:anon_edit', kwargs={'id': instance.id, 'skey': instance.skey}),
+                                    self.edit_input, follow=True)
+        self.assertContains(response, self.edit_input['title'], status_code=200)
+
+    def test_anonymous_user_edit_page_without_secretkey(self):
+        self.client.post(reverse('logout'), follow=True)
+        r = self.client.post(reverse('posts:create'), self.input)
+        instance = Post.objects.get(id=r.url.split('/')[2])
+        url = self.client.get(reverse('posts:edit', kwargs={'id': instance.id }))
+        self.assertEqual(url.status_code, 404)
+
+class ClaimPostTest(TestCase):
+    def setUp(self):
+        self.input = {'title': 'This is cool post','body': '<h1>This is the main heading </h1> <script>alert("Hello");</script><h2>This is the sub heading </h2>the is para one\n\n what an awsome post by somebody cool.'}
+        self.r = self.client.post(reverse('posts:create'), self.input)
+        self.instance = Post.objects.get(id=self.r.url.split('/')[2])
+        self.signup1 = {'username': 'testuser2', 'password1': 'aaaa1234', 'password2': 'aaaa1234'}
+
+    def test_claim_function_loggedin_user(self):
+        self.client.post(reverse('signup'), self.signup1, follow=True)
+        self.client.post(reverse('posts:claim', kwargs={'id': self.instance.id, 'skey': self.instance.skey}))
+        response = self.client.get(reverse('posts:myposts'), follow=True)
+        title = self.input['title']
+        self.assertContains(response, title, status_code=200)
+
+    def test_get_method_error_claim_function_loggedin_user(self):
+        self.client.post(reverse('signup'), self.signup1, follow=True)
+        self.client.get(reverse('posts:claim', kwargs={'id': self.instance.id, 'skey': self.instance.skey}))
+        response = self.client.get(reverse('posts:myposts'), follow=True)
+        title = self.input['title']
+        self.assertNotContains(response, title, status_code=200)
+
+    def test_Anonymous_user_dont_have_claim_button_(self):
+        response = self.client.get(reverse('posts:anon_edit', kwargs={'id': self.instance.id, 'skey': self.instance.skey}))
+        self.assertNotContains(response, 'Claim this Post as yours', status_code=200)
