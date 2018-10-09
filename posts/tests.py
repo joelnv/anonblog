@@ -195,7 +195,7 @@ class EditPageTest(TestCase):
         r = self.client.post(reverse('posts:create'), self.input)
         instance = Post.objects.get(id=r.url.split('/')[2])
         response = self.client.get(reverse('posts:edit', kwargs={'id': instance.id }))
-        self.assertContains(response, 'this would have been a great day if...', status_code=200)
+        self.assertContains(response, self.input['body'], status_code=200)
         response = self.client.post(reverse('posts:edit', kwargs={'id': instance.id }), self.edit_input, follow=True)
         self.assertContains(response, self.edit_input['title'], status_code=200)
 
