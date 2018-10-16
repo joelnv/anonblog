@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/2.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
-
+import psycopg2.extensions
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -76,10 +76,18 @@ WSGI_APPLICATION = 'anonblog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'posts',
+        'USER': 'joel',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '',
+        },
+
+    'OPTIONS': {
+            'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE,
+        },
     }
-}
 
 
 # Password validation
